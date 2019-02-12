@@ -1,0 +1,345 @@
+object Form1: TForm1
+  Left = 330
+  Height = 730
+  Top = 667
+  Width = 1241
+  Caption = 'Form1'
+  ClientHeight = 0
+  ClientWidth = 0
+  DesignTimePPI = 120
+  OnCreate = FormCreate
+  LCLVersion = '1.8.2.0'
+  object Image2: TImage
+    Left = -16
+    Height = 872
+    Top = -8
+    Width = 1304
+  end
+  object Edit1: TEdit
+    Left = 72
+    Height = 39
+    Top = 72
+    Width = 224
+    AutoSize = False
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -23
+    Font.Name = '@Malgun Gothic Semilight'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentFont = False
+    TabOrder = 0
+    Text = 'Edit1'
+  end
+  object Button1: TButton
+    Left = 336
+    Height = 39
+    Top = 72
+    Width = 94
+    Caption = 'hladaj'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object Image1: TImage
+    Left = 72
+    Height = 345
+    Top = 160
+    Width = 545
+  end
+  object Label1: TLabel
+    Left = 184
+    Height = 25
+    Top = 176
+    Width = 64
+    Caption = 'NAZOV'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -18
+    Font.Name = '@Malgun Gothic'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    OnClick = Label1Click
+  end
+  object Label2: TLabel
+    Left = 272
+    Height = 25
+    Top = 176
+    Width = 48
+    Caption = 'CENA'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -18
+    Font.Name = '@Malgun Gothic'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    OnClick = Label2Click
+  end
+  object Label3: TLabel
+    Left = 112
+    Height = 25
+    Top = 176
+    Width = 39
+    Caption = 'KOD'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -18
+    Font.Name = '@Malgun Gothic'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label4: TLabel
+    Left = 344
+    Height = 25
+    Top = 176
+    Width = 102
+    Caption = 'MNOZSTVO'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -18
+    Font.Name = '@Malgun Gothic'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Label5: TLabel
+    Left = 472
+    Height = 25
+    Top = 176
+    Width = 120
+    Caption = 'OBJEDNAVKA'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -18
+    Font.Name = '@Malgun Gothic'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+  end
+  object Memo1: TMemo
+    Left = 112
+    Height = 102
+    Top = 560
+    Width = 206
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 2
+  end
+  object Edit2: TEdit
+    Left = 480
+    Height = 28
+    Top = 224
+    Width = 100
+    NumbersOnly = True
+    TabOrder = 3
+    Text = 'Edit2'
+  end
+  object Edit3: TEdit
+    Left = 480
+    Height = 28
+    Top = 256
+    Width = 100
+    NumbersOnly = True
+    TabOrder = 4
+    Text = 'Edit3'
+  end
+  object Edit4: TEdit
+    Left = 480
+    Height = 28
+    Top = 288
+    Width = 100
+    NumbersOnly = True
+    TabOrder = 5
+    Text = 'Edit4'
+  end
+  object Edit5: TEdit
+    Left = 480
+    Height = 28
+    Top = 320
+    Width = 100
+    NumbersOnly = True
+    TabOrder = 6
+    Text = 'Edit5'
+  end
+  object Edit6: TEdit
+    Left = 480
+    Height = 28
+    Top = 352
+    Width = 100
+    NumbersOnly = True
+    ParentShowHint = False
+    TabOrder = 7
+    Text = 'Edit6'
+  end
+  object Edit7: TEdit
+    Left = 480
+    Height = 28
+    Top = 384
+    Width = 100
+    NumbersOnly = True
+    TabOrder = 8
+    Text = 'Edit7'
+  end
+  object Button4: TButton
+    Left = 480
+    Height = 35
+    Top = 440
+    Width = 100
+    Caption = 'objednaj'
+    OnClick = Button4Click
+    TabOrder = 9
+  end
+  object Label6: TLabel
+    Left = 72
+    Height = 38
+    Top = 8
+    Width = 114
+    Caption = 'SKLAD'
+    Font.CharSet = ANSI_CHARSET
+    Font.Color = clYellow
+    Font.Height = -33
+    Font.Name = 'Arial Rounded MT Bold'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object Button5: TButton
+    Left = 456
+    Height = 39
+    Top = 72
+    Width = 112
+    Caption = 'zrusit hladanie'
+    OnClick = Button5Click
+    TabOrder = 10
+  end
+  object Edit8: TEdit
+    Left = 480
+    Height = 28
+    Top = 520
+    Width = 100
+    TabOrder = 11
+    Text = 'Edit8'
+  end
+  object Label7: TLabel
+    Left = 256
+    Height = 23
+    Top = 520
+    Width = 214
+    Caption = 'minimalna objednavka pod:'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -17
+    Font.Name = '@Malgun Gothic'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentColor = False
+    ParentFont = False
+  end
+  object zoznamTovaru: TStringGrid
+    Left = 648
+    Height = 344
+    Top = 160
+    Width = 548
+    ColCount = 4
+    Columns = <    
+      item
+        ReadOnly = False
+        Title.Caption = 'Kod'
+        Width = 80
+      end    
+      item
+        Title.Caption = 'Nazov'
+        Width = 51
+      end    
+      item
+        Title.Caption = 'Cena'
+        Width = 291
+      end    
+      item
+        Title.Caption = 'Mnozstvo'
+        Width = 170
+      end>
+    DefaultColWidth = 80
+    DefaultRowHeight = 40
+    FixedCols = 0
+    RowCount = 7
+    TabOrder = 12
+    ColWidths = (
+      80
+      51
+      291
+      170
+    )
+    Cells = (
+      3
+      1
+      0
+      'Kod'
+      2
+      0
+      'Nazov'
+      3
+      0
+      'Cena'
+    )
+  end
+  object zoznamTovaru1: TStringGrid
+    Left = 640
+    Height = 344
+    Top = 512
+    Width = 548
+    ColCount = 4
+    Columns = <    
+      item
+        Title.Caption = 'Kod'
+        Width = 80
+      end    
+      item
+        Title.Caption = 'Nazov'
+        Width = 51
+      end    
+      item
+        Title.Caption = 'Cena'
+        Width = 291
+      end    
+      item
+        Title.Caption = 'Mnozstvo'
+        Width = 170
+      end>
+    DefaultColWidth = 80
+    DefaultRowHeight = 40
+    FixedCols = 0
+    RowCount = 7
+    TabOrder = 13
+    ColWidths = (
+      80
+      51
+      291
+      170
+    )
+    Cells = (
+      3
+      1
+      0
+      'Kod'
+      2
+      0
+      'Nazov'
+      3
+      0
+      'Cena'
+    )
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    left = 72
+    top = 512
+  end
+end
