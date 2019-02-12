@@ -116,16 +116,16 @@ begin
 
     for y:=1 to pocet do
       begin
-        x:=0;
-        repeat
-        zoznamTovaru.cells[x,y]:=InttoStr(polozka[y].kod);
+        //x:=0;
+        //repeat
+        zoznamTovaru.cells[0,y]:=InttoStr(polozka[y].kod);
         inc(x);
-        zoznamTovaru.cells[x,y]:=polozka[y].nazov;
+        zoznamTovaru.cells[1,y]:=polozka[y].nazov;
         inc(x);
-        zoznamTovaru.cells[x,y]:=InttoStr(polozka[y].cena);
+        zoznamTovaru.cells[2,y]:=InttoStr(polozka[y].cena);
         inc(x);
-        zoznamTovaru.cells[x,y]:=InttoStr(polozka[y].mnozstvo);
-        until x>3;
+        zoznamTovaru.cells[3,y]:=InttoStr(polozka[y].mnozstvo);
+        //until x>3;
       end;
     end;
 
