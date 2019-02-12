@@ -18,6 +18,7 @@ type
 
   TForm1 = class(TForm)
     Button1: TButton;
+    Button2: TButton;
     Button4: TButton;
     Button5: TButton;
     Edit1: TEdit;
@@ -61,7 +62,7 @@ var
   polozka:array[1..8]of zoznam;
   ciselnetriedenia:array[1..8]of Integer;
   subor:textfile;
-  hladane:Boolean;
+  hladane,triedene:Boolean;
   poradievt,cislopolozky,pocet:Integer;
   minobjednavka:String;
   Form1: TForm1;
@@ -73,7 +74,7 @@ implementation
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
-  var j,x,y:Integer;
+  var j,l,x,y:Integer;
 begin
   Timer1.Enabled:=false;
  // Image3.Picture.LoadfromFile('pozadie2.jpg');
@@ -113,6 +114,11 @@ begin
     Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[j].cena));
     Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[j].mnozstvo));
     end;
+
+ for l:=1 to pocet do
+   ciselnetriedenia[l]:=l;
+
+ Timer1.Enabled:=true;
 
     for y:=1 to pocet do
       begin
@@ -180,9 +186,16 @@ begin
 end;
 
 procedure TForm1.Button4Click(Sender: TObject);
-  var i:Integer;
+  var i,j:Integer;
 begin
-   if StrtoInt(Edit2.Text)>0 then
+  {if triedene=false then
+     begin
+       for j:=1 to pocet do
+       polozka[ciselnetriedenia[j]]:=polozka[j];
+     end
+   else }
+   //begin
+    if StrtoInt(Edit2.Text)>0 then
     begin
      polozka[ciselnetriedenia[1]].mnozstvo:=polozka[ciselnetriedenia[1]].mnozstvo+StrtoInt(Edit2.Text);
     end;
@@ -211,8 +224,12 @@ begin
     begin
      polozka[ciselnetriedenia[6]].mnozstvo:=polozka[ciselnetriedenia[6]].mnozstvo+StrtoInt(Edit7.Text);
     end;
+
+   //end;
+
+   triedene:=true;
  //nejde menit v subore,zapisovat
-  Assignfile(subor,'tovar.txt');
+ { Assignfile(subor,'tovar.txt');
   Rewrite(subor);
 
   for i:=1 to pocet do
@@ -222,20 +239,25 @@ begin
       Writeln(subor,InttoStr(polozka[i].kod));
       Writeln(subor,InttoStr(polozka[i].mnozstvo));
     end;
-  closeFile(subor);
+  closeFile(subor);  }
 end;
 
 procedure TForm1.Button5Click(Sender: TObject);
-  var j:Integer;
+  var j,l:Integer;
 begin
+
+
   Edit3.Visible:=true;      //zapnutie  moznosti objednavania
   Edit4.Visible:=true;
   Edit5.Visible:=true;
   Edit6.Visible:=true;
   Edit7.Visible:=true;
 
+   for l:=1 to pocet do
+   ciselnetriedenia[l]:=l;
+
   Timer1.Enabled:=true;
-  Image1.Canvas.Fillrect(Clientrect);
+ { Image1.Canvas.Fillrect(Clientrect);
 
       for j:=1 to pocet do
     begin
@@ -243,7 +265,7 @@ begin
     Image1.Canvas.TextOut(140,30+35*j,polozka[j].nazov);
     Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[j].cena));
     Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[j].mnozstvo));
-    end;
+    end;  }
 end;
 
 procedure TForm1.Label1Click(Sender: TObject);
@@ -292,10 +314,12 @@ begin
     for l:=1 to pocet do
       ciselnetriedenia[l]:=triedenieCena[l];
 
+    triedene:=true;
+
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
-  var i,j,minobjednavkacislo,error:Integer;
+  var i,j,y,minobjednavkacislo,error:Integer;
 begin
   minobjednavka:=Edit8.Text;
 
@@ -314,18 +338,41 @@ begin
 
     Image1.Canvas.Fillrect(Clientrect);
 
+    for j:=1 to pocet do
+        begin
+        Image1.Canvas.TextOut(50,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].kod));
+        Image1.Canvas.TextOut(140,30+35*j,polozka[ciselnetriedenia[j]].nazov);
+        Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].cena));
+        Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].mnozstvo));
+        end;
 
+      for y:=1 to pocet do
+      begin
+        zoznamTovaru.cells[0,y]:=InttoStr(polozka[y].kod);
+        zoznamTovaru.cells[1,y]:=polozka[y].nazov;
+        zoznamTovaru.cells[2,y]:=InttoStr(polozka[y].cena);
+        zoznamTovaru.cells[3,y]:=InttoStr(polozka[y].mnozstvo);
+      end;
 
-      for j:=1 to pocet do
+    {if triedene= true then
+      begin
+
+      end
+    else
     begin
-    Image1.Canvas.TextOut(50,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].kod));
-    Image1.Canvas.TextOut(140,30+35*j,polozka[ciselnetriedenia[j]].nazov);
-    Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].cena));
-    Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].mnozstvo));
-    end;
+    for j:=1 to pocet do
+      begin
+        Image1.Canvas.TextOut(50,30+35*j,InttoStr(polozka[j].kod));
+        Image1.Canvas.TextOut(140,30+35*j,polozka[j].nazov);
+        Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[j].cena));
+        Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[j].mnozstvo));
+      end;
+    end;  }
 
 
 end;
+
+
 //test github, gitkraken inf basos market
 
 
