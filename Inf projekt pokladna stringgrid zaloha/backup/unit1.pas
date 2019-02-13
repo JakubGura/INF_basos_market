@@ -19,8 +19,10 @@ type
   TForm1 = class(TForm)
     Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6: TButton;
     Edit1: TEdit;
     Edit2: TEdit;
     Edit3: TEdit;
@@ -31,6 +33,7 @@ type
     Edit8: TEdit;
     Image1: TImage;
     Image2: TImage;
+    Image3: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -47,10 +50,12 @@ type
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Label1Click(Sender: TObject);
     procedure Label2Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure zoznamTovaru1Click(Sender: TObject);
 
   private
 
@@ -62,7 +67,7 @@ var
   polozka:array[1..8]of zoznam;
   ciselnetriedenia:array[1..8]of Integer;
   subor:textfile;
-  hladane,triedene:Boolean;
+  triedene:Boolean;
   poradievt,cislopolozky,pocet:Integer;
   minobjednavka:String;
   Form1: TForm1;
@@ -79,6 +84,7 @@ begin
   Timer1.Enabled:=false;
  // Image3.Picture.LoadfromFile('pozadie2.jpg');
   Image2.Picture.LoadfromFile('pozadie1.jpg');
+  Image3.Picture.LoadfromFile('logo.png');
   Image1.Canvas.Fillrect(ClientRect);
   Edit1.Clear;
   Edit2.Text:='0';
@@ -116,7 +122,7 @@ begin
     end;
 
  for l:=1 to pocet do
-   ciselnetriedenia[l]:=l;
+   ciselnetriedenia[l]:=l;    //beztriedenia,zakladny vypis
 
  Timer1.Enabled:=true;
 
@@ -134,8 +140,6 @@ begin
         //until x>3;
       end;
     end;
-
-
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
@@ -176,13 +180,76 @@ begin
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
+  var i,j,l,pocetTriedenie,pomocna,najindex:Integer;
+  triedenieCena:array[1..maxpocet]of Integer;
 begin
-  hladane:=true;
+
+   //if (zoznamTovaru.Col=3) and (zoznamTovaru.Row=1) then
+    //begin
+
+     for i:=1 to pocet do
+       begin
+         triedenieCena[i]:=i;
+       end;
+
+
+
+     for pocetTriedenie:= pocet downto 2 do
+       begin
+         najindex:=1;
+         for j:=2 to pocetTriedenie do
+           begin
+             if polozka[triedenieCena[j]].cena>polozka[triedenieCena[najindex]].cena then
+              begin
+               najindex:=j;
+              end;
+             pomocna:=triedenieCena[pocetTriedenie];
+             triedenieCena[pocetTriedenie]:=triedenieCena[najindex];
+             triedenieCena[najindex]:=pomocna;
+           end;
+         end;
+
+       for l:=1 to pocet do
+        ciselnetriedenia[l]:=triedenieCena[l];   //triedenie podla ceny
+
+
+
+    Timer1.Enabled:=true;
+
+    //end;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
+   var i,j,l,pocetTriedenie,pomocna,najindex:Integer;
+  triedenieKod:array[1..maxpocet]of Integer;
 begin
-  hladane:=false;
+
+  for i:=1 to pocet do
+       begin
+         triedenieKod[i]:=i;
+       end;
+
+
+
+     for pocetTriedenie:= pocet downto 2 do
+       begin
+         najindex:=1;
+         for j:=2 to pocetTriedenie do
+           begin
+             if polozka[triedenieKod[j]].kod>polozka[triedenieKod[najindex]].kod then
+              begin
+               najindex:=j;
+              end;
+             pomocna:=triedenieKod[pocetTriedenie];
+             triedenieKod[pocetTriedenie]:=triedenieKod[najindex];
+             triedenieKod[najindex]:=pomocna;
+           end;
+         end;
+
+       for l:=1 to pocet do
+        ciselnetriedenia[l]:=triedenieKod[l];   //triedenie podla kodu
+
+       Timer1.Enabled:=true;
 end;
 
 procedure TForm1.Button4Click(Sender: TObject);
@@ -268,6 +335,38 @@ begin
     end;  }
 end;
 
+procedure TForm1.Button6Click(Sender: TObject);
+  var i,j,l,pocetTriedenie,pomocna,najindex:Integer;
+  triedenieCena:array[1..maxpocet]of Integer;
+begin
+      for i:=1 to pocet do
+       begin
+         triedenieMnozstvo[i]:=i;
+       end;
+
+
+
+     for pocetTriedenie:= pocet downto 2 do
+       begin
+         najindex:=1;
+         for j:=2 to pocetTriedenie do
+           begin
+             if polozka[triedenieMnozstvo[j]].mnozstvo>polozka[triedenieMnozstvo[najindex]].mnozstvo then
+              begin
+               najindex:=j;
+              end;
+             pomocna:=triedenieMnozstvo[pocetTriedenie];
+             triedenieMnozstvo[pocetTriedenie]:=triedenieMnozstvo[najindex];
+             triedenieMnozstvo[najindex]:=pomocna;
+           end;
+         end;
+
+       for l:=1 to pocet do
+        ciselnetriedenia[l]:=triedenieMnozstvo[l];   //triedenie podla kodu
+
+       Timer1.Enabled:=true;
+end;
+
 procedure TForm1.Label1Click(Sender: TObject);
 begin
 
@@ -319,7 +418,7 @@ begin
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
-  var i,j,minobjednavkacislo,error:Integer;
+  var i,j,y,minobjednavkacislo,error:Integer;
 begin
   minobjednavka:=Edit8.Text;
 
@@ -348,13 +447,10 @@ begin
 
       for y:=1 to pocet do
       begin
-        zoznamTovaru.cells[0,y]:=InttoStr(polozka[y].kod);
-        inc(x);
-        zoznamTovaru.cells[1,y]:=polozka[y].nazov;
-        inc(x);
-        zoznamTovaru.cells[2,y]:=InttoStr(polozka[y].cena);
-        inc(x);
-        zoznamTovaru.cells[3,y]:=InttoStr(polozka[y].mnozstvo);
+        zoznamTovaru.cells[0,y]:=InttoStr(polozka[ciselnetriedenia[y]].kod);
+        zoznamTovaru.cells[1,y]:=polozka[ciselnetriedenia[y]].nazov;
+        zoznamTovaru.cells[2,y]:=InttoStr(polozka[ciselnetriedenia[y]].cena);
+        zoznamTovaru.cells[3,y]:=InttoStr(polozka[ciselnetriedenia[y]].mnozstvo);
       end;
 
     {if triedene= true then
@@ -371,6 +467,13 @@ begin
         Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[j].mnozstvo));
       end;
     end;  }
+
+
+end;
+
+procedure TForm1.zoznamTovaru1Click(Sender: TObject);
+
+begin
 
 
 end;
