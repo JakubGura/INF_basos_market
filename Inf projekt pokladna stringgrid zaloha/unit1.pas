@@ -142,21 +142,31 @@ begin
     end;
 
 procedure TForm1.Button1Click(Sender: TObject);
+  var i:Integer;
 begin
-  {if  RadioButtonnazov.Checked =true then
+    {if  RadioButtonnazov.Checked =true then
     hladane:='nazov'
     else hladane:='kod';
 
  Memo1.Append(hladane);    }
   Timer1.Enabled:=false; //zastavenie updatovania zoznamu
 
+  {cislopolozky:=0;
+  if Edit1.Text='' then
+  exit; }
   cislopolozky:=0;
 
-  repeat
-    inc(cislopolozky);
-  until
-       (Edit1.Text=polozka[cislopolozky].nazov) or (Edit1.Text=InttoStr(polozka[cislopolozky].kod));
+  for i:=1 to pocet do
+    begin
+      if (Edit1.Text=polozka[i].nazov) or (Edit1.Text=InttoStr(polozka[i].kod))then
+       cislopolozky:=i;
+    end;
 
+   if cislopolozky=0 then
+    begin
+    Showmessage('nezadal si správne,skús znova.');
+    exit;
+    end;
 
   { repeat
     inc(i);
@@ -171,6 +181,12 @@ begin
   Image1.Canvas.TextOut(220,30+30,InttoStr(polozka[cislopolozky].cena));
   Image1.Canvas.TextOut(320,30+30,InttoStr(polozka[cislopolozky].mnozstvo));
 
+  zoznamTovaru.cells[0,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod);
+  zoznamTovaru.cells[1,1]:=polozka[cislopolozky].nazov;
+  zoznamTovaru.cells[2,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].cena);
+  zoznamTovaru.cells[3,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].mnozstvo);
+
+  zoznamTovaru.Rowcount:=2;
  // if cislopolozky=1 then
   Edit3.Visible:=false;      //vypnutie moznosti objednavania
   Edit4.Visible:=false;
@@ -322,6 +338,8 @@ begin
 
    for l:=1 to pocet do
    ciselnetriedenia[l]:=l;
+
+  zoznamTovaru.Rowcount:=pocet+1;
 
   Timer1.Enabled:=true;
  { Image1.Canvas.Fillrect(Clientrect);
