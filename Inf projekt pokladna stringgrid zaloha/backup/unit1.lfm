@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 652
+  Left = 200
   Height = 600
-  Top = 216
+  Top = 407
   Width = 1306
   Caption = 'Form1'
   ClientHeight = 600
@@ -10,7 +10,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   LCLVersion = '1.8.2.0'
   object Image2: TImage
-    Left = -16
+    Left = 0
     Height = 872
     Top = -8
     Width = 1304
@@ -39,89 +39,6 @@ object Form1: TForm1
     OnClick = Button1Click
     TabOrder = 1
   end
-  object Image1: TImage
-    Left = 80
-    Height = 345
-    Top = 152
-    Width = 545
-  end
-  object Label1: TLabel
-    Left = 184
-    Height = 25
-    Top = 176
-    Width = 64
-    Caption = 'NAZOV'
-    Font.CharSet = ANSI_CHARSET
-    Font.Height = -18
-    Font.Name = '@Malgun Gothic'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    OnClick = Label1Click
-  end
-  object Label2: TLabel
-    Left = 272
-    Height = 25
-    Top = 176
-    Width = 48
-    Caption = 'CENA'
-    Font.CharSet = ANSI_CHARSET
-    Font.Height = -18
-    Font.Name = '@Malgun Gothic'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    OnClick = Label2Click
-  end
-  object Label3: TLabel
-    Left = 112
-    Height = 25
-    Top = 176
-    Width = 39
-    Caption = 'KOD'
-    Font.CharSet = ANSI_CHARSET
-    Font.Height = -18
-    Font.Name = '@Malgun Gothic'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object Label4: TLabel
-    Left = 344
-    Height = 25
-    Top = 176
-    Width = 102
-    Caption = 'MNOZSTVO'
-    Font.CharSet = ANSI_CHARSET
-    Font.Height = -18
-    Font.Name = '@Malgun Gothic'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object Label5: TLabel
-    Left = 472
-    Height = 25
-    Top = 176
-    Width = 120
-    Caption = 'OBJEDNAVKA'
-    Font.CharSet = ANSI_CHARSET
-    Font.Height = -18
-    Font.Name = '@Malgun Gothic'
-    Font.Pitch = fpVariable
-    Font.Quality = fqDraft
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object Memo1: TMemo
     Left = 112
     Height = 102
@@ -132,69 +49,14 @@ object Form1: TForm1
     )
     TabOrder = 2
   end
-  object Edit2: TEdit
-    Left = 480
-    Height = 28
-    Top = 224
-    Width = 100
-    NumbersOnly = True
-    TabOrder = 3
-    Text = 'Edit2'
-  end
-  object Edit3: TEdit
-    Left = 480
-    Height = 28
-    Top = 256
-    Width = 100
-    NumbersOnly = True
-    TabOrder = 4
-    Text = 'Edit3'
-  end
-  object Edit4: TEdit
-    Left = 480
-    Height = 28
-    Top = 288
-    Width = 100
-    NumbersOnly = True
-    TabOrder = 5
-    Text = 'Edit4'
-  end
-  object Edit5: TEdit
-    Left = 480
-    Height = 28
-    Top = 320
-    Width = 100
-    NumbersOnly = True
-    TabOrder = 6
-    Text = 'Edit5'
-  end
-  object Edit6: TEdit
-    Left = 480
-    Height = 28
-    Top = 352
-    Width = 100
-    NumbersOnly = True
-    ParentShowHint = False
-    TabOrder = 7
-    Text = 'Edit6'
-  end
-  object Edit7: TEdit
-    Left = 480
-    Height = 28
-    Top = 384
-    Width = 100
-    NumbersOnly = True
-    TabOrder = 8
-    Text = 'Edit7'
-  end
   object Button4: TButton
-    Left = 480
+    Left = 672
     Height = 35
-    Top = 440
+    Top = 512
     Width = 100
     Caption = 'objednaj'
     OnClick = Button4Click
-    TabOrder = 9
+    TabOrder = 3
   end
   object Label6: TLabel
     Left = 72
@@ -218,14 +80,14 @@ object Form1: TForm1
     Width = 112
     Caption = 'zrusit hladanie'
     OnClick = Button5Click
-    TabOrder = 10
+    TabOrder = 4
   end
   object Edit8: TEdit
     Left = 480
     Height = 28
     Top = 520
     Width = 100
-    TabOrder = 11
+    TabOrder = 5
     Text = 'Edit8'
   end
   object Label7: TLabel
@@ -243,9 +105,9 @@ object Form1: TForm1
     ParentFont = False
   end
   object zoznamTovaru: TStringGrid
-    Left = 632
+    Left = 72
     Height = 288
-    Top = 160
+    Top = 176
     Width = 544
     ColCount = 4
     Columns = <    
@@ -255,11 +117,11 @@ object Form1: TForm1
       end    
       item
         Title.Caption = 'Nazov'
-        Width = 51
+        Width = 124
       end    
       item
         Title.Caption = 'Cena'
-        Width = 179
+        Width = 150
       end    
       item
         Title.Caption = 'Mnozstvo'
@@ -269,30 +131,19 @@ object Form1: TForm1
     DefaultRowHeight = 40
     FixedCols = 0
     RowCount = 7
-    TabOrder = 12
+    TabOrder = 6
+    OnClick = zoznamTovaruClick
     ColWidths = (
       80
-      51
-      179
+      124
+      150
       233
-    )
-    Cells = (
-      3
-      1
-      0
-      'Kod'
-      2
-      0
-      'Nazov'
-      3
-      0
-      'Cena'
     )
   end
   object zoznamTovaru1: TStringGrid
-    Left = 640
-    Height = 344
-    Top = 512
+    Left = 664
+    Height = 288
+    Top = 176
     Width = 548
     ColCount = 4
     Columns = <    
@@ -316,7 +167,7 @@ object Form1: TForm1
     DefaultRowHeight = 40
     FixedCols = 0
     RowCount = 7
-    TabOrder = 13
+    TabOrder = 7
     OnClick = zoznamTovaru1Click
     ColWidths = (
       80
@@ -338,31 +189,31 @@ object Form1: TForm1
     )
   end
   object Button2: TButton
-    Left = 768
+    Left = 280
     Height = 31
-    Top = 88
+    Top = 136
     Width = 94
     Caption = 'cena'
     OnClick = Button2Click
-    TabOrder = 14
+    TabOrder = 8
   end
   object Button3: TButton
-    Left = 664
+    Left = 72
     Height = 31
-    Top = 88
-    Width = 94
+    Top = 136
+    Width = 78
     Caption = 'kod'
     OnClick = Button3Click
-    TabOrder = 15
+    TabOrder = 9
   end
   object Button6: TButton
-    Left = 872
+    Left = 432
     Height = 31
-    Top = 88
+    Top = 136
     Width = 94
     Caption = 'mnozstvo'
     OnClick = Button6Click
-    TabOrder = 16
+    TabOrder = 10
   end
   object Image3: TImage
     Left = 992
@@ -371,6 +222,7 @@ object Form1: TForm1
     Width = 256
   end
   object Timer1: TTimer
+    Interval = 10
     OnTimer = Timer1Timer
     left = 72
     top = 512

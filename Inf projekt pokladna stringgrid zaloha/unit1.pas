@@ -24,21 +24,9 @@ type
     Button5: TButton;
     Button6: TButton;
     Edit1: TEdit;
-    Edit2: TEdit;
-    Edit3: TEdit;
-    Edit4: TEdit;
-    Edit5: TEdit;
-    Edit6: TEdit;
-    Edit7: TEdit;
     Edit8: TEdit;
-    Image1: TImage;
     Image2: TImage;
     Image3: TImage;
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
     Label6: TLabel;
     Label7: TLabel;
     Memo1: TMemo;
@@ -56,6 +44,7 @@ type
     procedure Label2Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure zoznamTovaru1Click(Sender: TObject);
+    procedure zoznamTovaruClick(Sender: TObject);
 
   private
 
@@ -68,7 +57,7 @@ var
   ciselnetriedenia:array[1..8]of Integer;
   subor:textfile;
   triedene:Boolean;
-  poradievt,cislopolozky,pocet:Integer;
+  poradievt,cislopolozky,pocet,indexobjednavky:Integer;
   minobjednavka:String;
   Form1: TForm1;
 
@@ -79,21 +68,14 @@ implementation
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
-  var j,l,x,y:Integer;
+  var l,y:Integer;
 begin
+
+  indexobjednavky:=1;
   Timer1.Enabled:=false;
- // Image3.Picture.LoadfromFile('pozadie2.jpg');
   Image2.Picture.LoadfromFile('pozadie1.jpg');
   Image3.Picture.LoadfromFile('logo.png');
-  Image1.Canvas.Fillrect(ClientRect);
-  Edit1.Clear;
-  Edit2.Text:='0';
-  Edit3.Text:='0';
-  Edit4.Text:='0';
-  Edit5.Text:='0';
-  Edit6.Text:='0';
-  Edit7.Text:='0';
-  Edit8.Text:='0';
+
   Memo1.Clear;
 
   cislopolozky:=0;
@@ -113,13 +95,6 @@ begin
   Closefile(subor);  //cim skor zavriet subor
     pocet:=cislopolozky;
 
-    for j:=1 to cislopolozky do
-    begin
-    Image1.Canvas.TextOut(50,30+35*j,InttoStr(polozka[j].kod));
-    Image1.Canvas.TextOut(140,30+35*j,polozka[j].nazov);
-    Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[j].cena));
-    Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[j].mnozstvo));
-    end;
 
  for l:=1 to pocet do
    ciselnetriedenia[l]:=l;    //beztriedenia,zakladny vypis
@@ -128,18 +103,13 @@ begin
 
     for y:=1 to pocet do
       begin
-        //x:=0;
-        //repeat
         zoznamTovaru.cells[0,y]:=InttoStr(polozka[y].kod);
-        inc(x);
         zoznamTovaru.cells[1,y]:=polozka[y].nazov;
-        inc(x);
         zoznamTovaru.cells[2,y]:=InttoStr(polozka[y].cena);
-        inc(x);
         zoznamTovaru.cells[3,y]:=InttoStr(polozka[y].mnozstvo);
-        //until x>3;
       end;
     end;
+
 
 procedure TForm1.Button1Click(Sender: TObject);
   var i:Integer;
@@ -174,13 +144,6 @@ begin
        Edit1.Text=InttoStr(polozka[i].kod);   }
 
 
-  Image1.Canvas.Fillrect(Clientrect);
-
-  Image1.Canvas.TextOut(50,30+30,InttoStr(polozka[cislopolozky].kod));
-  Image1.Canvas.TextOut(140,30+30,(polozka[cislopolozky].nazov));
-  Image1.Canvas.TextOut(220,30+30,InttoStr(polozka[cislopolozky].cena));
-  Image1.Canvas.TextOut(320,30+30,InttoStr(polozka[cislopolozky].mnozstvo));
-
   zoznamTovaru.cells[0,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod);
   zoznamTovaru.cells[1,1]:=polozka[cislopolozky].nazov;
   zoznamTovaru.cells[2,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].cena);
@@ -188,11 +151,6 @@ begin
 
   zoznamTovaru.Rowcount:=2;
  // if cislopolozky=1 then
-  Edit3.Visible:=false;      //vypnutie moznosti objednavania
-  Edit4.Visible:=false;
-  Edit5.Visible:=false;
-  Edit6.Visible:=false;
-  Edit7.Visible:=false;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -278,7 +236,8 @@ begin
      end
    else }
    //begin
-    if StrtoInt(Edit2.Text)>0 then
+
+  { if StrtoInt(Edit2.Text)>0 then
     begin
      polozka[ciselnetriedenia[1]].mnozstvo:=polozka[ciselnetriedenia[1]].mnozstvo+StrtoInt(Edit2.Text);
     end;
@@ -308,9 +267,9 @@ begin
      polozka[ciselnetriedenia[6]].mnozstvo:=polozka[ciselnetriedenia[6]].mnozstvo+StrtoInt(Edit7.Text);
     end;
 
-   //end;
+   end;
 
-   triedene:=true;
+   triedene:=true;  }
  //nejde menit v subore,zapisovat
  { Assignfile(subor,'tovar.txt');
   Rewrite(subor);
@@ -328,14 +287,6 @@ end;
 procedure TForm1.Button5Click(Sender: TObject);
   var j,l:Integer;
 begin
-
-
-  Edit3.Visible:=true;      //zapnutie  moznosti objednavania
-  Edit4.Visible:=true;
-  Edit5.Visible:=true;
-  Edit6.Visible:=true;
-  Edit7.Visible:=true;
-
    for l:=1 to pocet do
    ciselnetriedenia[l]:=l;
 
@@ -395,7 +346,6 @@ procedure TForm1.Label2Click(Sender: TObject);
   triedenieCena:array[1..maxpocet]of Integer;
 begin
   Timer1.Enabled:=true;
-  Image1.Canvas.Fillrect(Clientrect);
 
 
  for i:=1 to pocet do
@@ -420,13 +370,6 @@ begin
        end;
      end;
 
-      for k:=1 to pocet do
-        begin
-          Image1.Canvas.TextOut(50,30+35*k,InttoStr(polozka[triedenieCena[k]].kod));
-          Image1.Canvas.TextOut(140,30+35*k,(polozka[triedenieCena[k]].nazov));
-          Image1.Canvas.TextOut(220,30+35*k,InttoStr(polozka[triedenieCena[k]].cena));
-          Image1.Canvas.TextOut(320,30+35*k ,InttoStr(polozka[triedenieCena[k]].mnozstvo));
-        end;
 
     for l:=1 to pocet do
       ciselnetriedenia[l]:=triedenieCena[l];
@@ -436,7 +379,7 @@ begin
 end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
-  var i,j,y,minobjednavkacislo,error:Integer;
+  var i,y,minobjednavkacislo,error:Integer;
 begin
   minobjednavka:=Edit8.Text;
 
@@ -453,38 +396,15 @@ begin
         end;
       end;
 
-    Image1.Canvas.Fillrect(Clientrect);
-
-    for j:=1 to pocet do
-        begin
-        Image1.Canvas.TextOut(50,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].kod));
-        Image1.Canvas.TextOut(140,30+35*j,polozka[ciselnetriedenia[j]].nazov);
-        Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].cena));
-        Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[ciselnetriedenia[j]].mnozstvo));
-        end;
-
       for y:=1 to pocet do
       begin
-        zoznamTovaru.cells[0,y]:=InttoStr(polozka[ciselnetriedenia[y]].kod);
-        zoznamTovaru.cells[1,y]:=polozka[ciselnetriedenia[y]].nazov;
-        zoznamTovaru.cells[2,y]:=InttoStr(polozka[ciselnetriedenia[y]].cena);
-        zoznamTovaru.cells[3,y]:=InttoStr(polozka[ciselnetriedenia[y]].mnozstvo);
+      zoznamTovaru.cells[0,y]:=InttoStr(polozka[ciselnetriedenia[y]].kod);
+      zoznamTovaru.cells[1,y]:=polozka[ciselnetriedenia[y]].nazov;
+      zoznamTovaru.cells[2,y]:=InttoStr(polozka[ciselnetriedenia[y]].cena);
+      zoznamTovaru.cells[3,y]:=InttoStr(polozka[ciselnetriedenia[y]].mnozstvo);
       end;
 
-    {if triedene= true then
-      begin
 
-      end
-    else
-    begin
-    for j:=1 to pocet do
-      begin
-        Image1.Canvas.TextOut(50,30+35*j,InttoStr(polozka[j].kod));
-        Image1.Canvas.TextOut(140,30+35*j,polozka[j].nazov);
-        Image1.Canvas.TextOut(220,30+35*j,InttoStr(polozka[j].cena));
-        Image1.Canvas.TextOut(320,30+35*j,InttoStr(polozka[j].mnozstvo));
-      end;
-    end;  }
 
 
 end;
@@ -494,6 +414,27 @@ procedure TForm1.zoznamTovaru1Click(Sender: TObject);
 begin
 
 
+end;
+
+procedure TForm1.zoznamTovaruClick(Sender: TObject);
+  var zadalNieco:Boolean;
+      inputString:String;
+begin
+   zadalNieco:=inputQuery('objednaj '+(polozka[ciselnetriedenia[zoznamTovaru.Row]].nazov),'zadaj mnozstvo',inputString);
+
+        if StrtoInt(inputString) > (polozka[ciselnetriedenia[zoznamTovaru.Row]].mnozstvo) then
+         begin
+         ShowMessage('Nemame dostatok tovaru na sklade');
+         Exit;
+         end;
+
+        zoznamTovaru1.cells[0,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[zoznamTovaru.Row]].kod);
+        zoznamTovaru1.cells[1,indexobjednavky]:=polozka[ciselnetriedenia[zoznamTovaru.Row]].nazov;
+        zoznamTovaru1.cells[2,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[zoznamTovaru.Row]].cena);
+        zoznamTovaru1.cells[3,indexobjednavky]:=inputString;
+
+        polozka[ciselnetriedenia[zoznamTovaru.Row]].mnozstvo:= polozka[ciselnetriedenia[zoznamTovaru.Row]].mnozstvo - StrtoInt(inputString);
+        //spravit objednavanie cez imputquars
 end;
 
 
