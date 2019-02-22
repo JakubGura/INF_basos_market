@@ -24,12 +24,14 @@ type
     Button5: TButton;
     Button6: TButton;
     Edit1: TEdit;
+    Edit2: TEdit;
     Edit8: TEdit;
     Image2: TImage;
     Image3: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
     Label6: TLabel;
     Label7: TLabel;
-    Memo1: TMemo;
     zoznamTovaru: TStringGrid;
     Timer1: TTimer;
     zoznamTovaru1: TStringGrid;
@@ -39,8 +41,10 @@ type
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure Edit1Click(Sender: TObject);
+    procedure Edit2Click(Sender: TObject);
+    procedure Edit8Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure Label1Click(Sender: TObject);
     procedure Label2Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
     procedure zoznamTovaru1Click(Sender: TObject);
@@ -56,8 +60,8 @@ var
   polozka:array[1..8]of zoznam;
   ciselnetriedenia:array[1..8]of Integer;
   subor:textfile;
-  triedene:Boolean;
-  poradievt,cislopolozky,pocet,indexobjednavky:Integer;
+  triedene,hladane:Boolean;
+  poradievt,cislopolozky,pocet,indexobjednavky,pocetobjednanych:Integer;
   minobjednavka:String;
   Form1: TForm1;
 
@@ -70,13 +74,12 @@ implementation
 procedure TForm1.FormCreate(Sender: TObject);
   var l,y:Integer;
 begin
-
-  indexobjednavky:=1;
+  pocetobjednanych:=1;
+  indexobjednavky:=0;
   Timer1.Enabled:=false;
   Image2.Picture.LoadfromFile('pozadie1.jpg');
   Image3.Picture.LoadfromFile('logo.png');
 
-  Memo1.Clear;
 
   cislopolozky:=0;
 
@@ -145,11 +148,13 @@ begin
 
 
   zoznamTovaru.cells[0,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod);
-  zoznamTovaru.cells[1,1]:=polozka[cislopolozky].nazov;
+  zoznamTovaru.cells[1,1]:=polozka[ciselnetriedenia[cislopolozky]].nazov;
   zoznamTovaru.cells[2,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].cena);
   zoznamTovaru.cells[3,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].mnozstvo);
 
+
   zoznamTovaru.Rowcount:=2;
+  hladane:=true;
  // if cislopolozky=1 then
 end;
 
@@ -287,6 +292,9 @@ end;
 procedure TForm1.Button5Click(Sender: TObject);
   var j,l:Integer;
 begin
+  triedene:=false;
+  hladane:=false;
+
    for l:=1 to pocet do
    ciselnetriedenia[l]:=l;
 
@@ -336,9 +344,21 @@ begin
        Timer1.Enabled:=true;
 end;
 
-procedure TForm1.Label1Click(Sender: TObject);
+procedure TForm1.Edit1Click(Sender: TObject);
 begin
+  Edit1.Clear;
+end;
 
+procedure TForm1.Edit2Click(Sender: TObject);
+begin
+   Edit2.Clear;
+end;
+
+
+
+procedure TForm1.Edit8Click(Sender: TObject);
+begin
+   Edit8.Clear;
 end;
 
 procedure TForm1.Label2Click(Sender: TObject);
@@ -380,8 +400,10 @@ end;
 
 procedure TForm1.Timer1Timer(Sender: TObject);
   var i,y,minobjednavkacislo,error:Integer;
+      mnozstvoobjednavky:String;
 begin
   minobjednavka:=Edit8.Text;
+  mnozstvoobjednavky:= Edit2.Text;
 
   val(minobjednavka,minobjednavkacislo,error);
 
@@ -391,7 +413,7 @@ begin
         begin
         if  polozka[i].mnozstvo<minobjednavkacislo then
           begin
-            polozka[i].mnozstvo:=20;
+            polozka[i].mnozstvo:=StrtoInt(mnozstvoobjednavky);
           end;
         end;
       end;
@@ -418,22 +440,42 @@ end;
 
 procedure TForm1.zoznamTovaruClick(Sender: TObject);
   var zadalNieco:Boolean;
+      inputStringcislo,error:Integer;
       inputString:String;
 begin
-   zadalNieco:=inputQuery('objednaj '+(polozka[ciselnetriedenia[zoznamTovaru.Row]].nazov),'zadaj mnozstvo',inputString);
 
-        if StrtoInt(inputString) > (polozka[ciselnetriedenia[zoznamTovaru.Row]].mnozstvo) then
+   if  hladane= false then
+     cislopolozky:=zoznamTovaru.Row;
+
+   zadalNieco:=inputQuery('objednaj '+(polozka[ciselnetriedenia[cislopolozky]].nazov),'zadaj mnozstvo',inputString);
+
+      {  if StrtoInt(inputString) > (polozka[ciselnetriedenia[cislopolozky]].mnozstvo) then
          begin
          ShowMessage('Nemame dostatok tovaru na sklade');
          Exit;
-         end;
+         end;}
+   val(inputString,inputStringcislo,error);
 
-        zoznamTovaru1.cells[0,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[zoznamTovaru.Row]].kod);
-        zoznamTovaru1.cells[1,indexobjednavky]:=polozka[ciselnetriedenia[zoznamTovaru.Row]].nazov;
-        zoznamTovaru1.cells[2,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[zoznamTovaru.Row]].cena);
+   if (inputString='') then
+      begin
+       exit;
+      end;
+
+   if (error=1) then
+    begin
+    Showmessage('nezadal si spravne mnozstvo');
+    exit;
+    end;
+        inc(indexobjednavky);
+        inc(pocetobjednanych);
+        zoznamTovaru1.Rowcount:=pocetobjednanych;
+
+        zoznamTovaru1.cells[0,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod);
+        zoznamTovaru1.cells[1,indexobjednavky]:=polozka[ciselnetriedenia[cislopolozky]].nazov;
+        zoznamTovaru1.cells[2,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].cena);
         zoznamTovaru1.cells[3,indexobjednavky]:=inputString;
 
-        polozka[ciselnetriedenia[zoznamTovaru.Row]].cena:= polozka[ciselnetriedenia[zoznamTovaru.Row]].mnozstvo - StrtoInt(inputString);
+        polozka[ciselnetriedenia[cislopolozky]].mnozstvo:= polozka[ciselnetriedenia[cislopolozky]].mnozstvo + StrtoInt(inputString);
         //spravit objednavanie cez imputquars
 end;
 
