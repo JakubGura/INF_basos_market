@@ -30,8 +30,11 @@ type
     Image3: TImage;
     Label1: TLabel;
     Label2: TLabel;
+    Label3: TLabel;
     Label6: TLabel;
     Label7: TLabel;
+    Memo1: TMemo;
+    Timer2: TTimer;
     zoznamTovaru: TStringGrid;
     Timer1: TTimer;
     zoznamTovaru1: TStringGrid;
@@ -42,12 +45,17 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure Edit1Click(Sender: TObject);
+    procedure Edit1Exit(Sender: TObject);
     procedure Edit2Click(Sender: TObject);
+    procedure Edit2Exit(Sender: TObject);
     procedure Edit8Click(Sender: TObject);
+    procedure Edit8Exit(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Label2Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
     procedure zoznamTovaru1Click(Sender: TObject);
+    procedure zoznamTovaruButtonClick(Sender: TObject; aCol, aRow: Integer);
     procedure zoznamTovaruClick(Sender: TObject);
 
   private
@@ -61,8 +69,8 @@ var
   ciselnetriedenia:array[1..8]of Integer;
   subor:textfile;
   triedene,hladane:Boolean;
-  poradievt,cislopolozky,pocet,indexobjednavky,pocetobjednanych:Integer;
-  minobjednavka:String;
+  poradievt,cislopolozky,pocet,indexobjednavky,pocetobjednanych,cenanakupu,mnozstvopridaneho,cenapridaneho:Integer;
+  skladverziaaktualna,skladverzia:Integer;
   Form1: TForm1;
 
 implementation
@@ -73,15 +81,21 @@ implementation
 
 procedure TForm1.FormCreate(Sender: TObject);
   var l,y:Integer;
+      tovar:String;
 begin
+  cenanakupu:=0;
   pocetobjednanych:=1;
   indexobjednavky:=0;
   Timer1.Enabled:=false;
+  Timer2.Enabled:=false;
+  skladverziaaktualna:=1;
+  skladverzia:=1;
+
   Image2.Picture.LoadfromFile('pozadie1.jpg');
   Image3.Picture.LoadfromFile('logo.png');
 
 
-  cislopolozky:=0;
+  {cislopolozky:=0;
 
   Assignfile(subor,'tovar.txt');
   Reset(subor);
@@ -95,7 +109,48 @@ begin
       Readln(subor,polozka[cislopolozky].mnozstvo);
 
     end;
-  Closefile(subor);  //cim skor zavriet subor
+  Closefile(subor);  //cim skor zavriet subor }
+
+    Assignfile(subor,'TOVAR..txt');
+    Reset(subor);
+    cislopolozky:=0;
+   while not eof(subor) do
+     begin
+      inc(cislopolozky);
+     Readln(subor,tovar);
+     polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+     polozka[cislopolozky].nazov:=copy(tovar,pos(';',tovar)+1,length(tovar));
+     Memo1.Append(InttoStr(polozka[cislopolozky].kod)+(polozka[cislopolozky].nazov));
+     end;
+   Closefile(subor);
+
+   Assignfile(subor,'CENNIK..txt');
+   Reset(subor);
+     cislopolozky:=0;
+    while not eof(subor) do
+      begin
+      inc(cislopolozky);
+      Readln(subor,tovar);
+      polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+      delete(tovar,1,pos(';',tovar));
+      polozka[cislopolozky].cena:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+      Memo1.Append(InttoStr(polozka[cislopolozky].kod)+InttoStr((polozka[cislopolozky].cena)));
+      end;
+    Closefile(subor);
+
+      Assignfile(subor,'SKLAD..txt');
+  Reset(subor);
+    cislopolozky:=0;
+   while not eof(subor) do
+     begin
+     inc(cislopolozky);
+     Readln(subor,tovar);
+     polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+     polozka[cislopolozky].mnozstvo:=StrtoInt(copy(tovar,pos(';',tovar)+1,length(tovar)));
+     Memo1.Append(InttoStr(polozka[cislopolozky].kod)+InttoStr(polozka[cislopolozky].mnozstvo));
+     end;
+   Closefile(subor);
+
     pocet:=cislopolozky;
 
 
@@ -131,7 +186,7 @@ begin
 
   for i:=1 to pocet do
     begin
-      if (Edit1.Text=polozka[i].nazov) or (Edit1.Text=InttoStr(polozka[i].kod))then
+      if (Edit1.Text=polozka[ciselnetriedenia[i]].nazov) or (Edit1.Text=InttoStr(polozka[ciselnetriedenia[i]].kod))then
        cislopolozky:=i;
     end;
 
@@ -229,6 +284,7 @@ begin
         ciselnetriedenia[l]:=triedenieKod[l];   //triedenie podla kodu
 
        Timer1.Enabled:=true;
+       hladane:=false;
 end;
 
 procedure TForm1.Button4Click(Sender: TObject);
@@ -287,6 +343,13 @@ begin
       Writeln(subor,InttoStr(polozka[i].mnozstvo));
     end;
   closeFile(subor);  }
+  Label3.Caption:=('spolu cela objednavka: 0 centov' );
+
+  cenanakupu:=0;
+  pocetobjednanych:=1;
+  indexobjednavky:=0;
+  zoznamTovaru1.Rowcount:=1;
+
 end;
 
 procedure TForm1.Button5Click(Sender: TObject);
@@ -349,9 +412,20 @@ begin
   Edit1.Clear;
 end;
 
+procedure TForm1.Edit1Exit(Sender: TObject);
+begin
+  if Edit1.Text='' then
+   Edit1.Text:='zadaj nazov alebo kod';
+end;
+
 procedure TForm1.Edit2Click(Sender: TObject);
 begin
    Edit2.Clear;
+end;
+
+procedure TForm1.Edit2Exit(Sender: TObject);
+begin
+ Edit2.Text:='zadaj mnozstvo';
 end;
 
 
@@ -359,6 +433,11 @@ end;
 procedure TForm1.Edit8Click(Sender: TObject);
 begin
    Edit8.Clear;
+end;
+
+procedure TForm1.Edit8Exit(Sender: TObject);
+begin
+  Edit8.Text:='zadaj mnozstvo';
 end;
 
 procedure TForm1.Label2Click(Sender: TObject);
@@ -398,16 +477,20 @@ begin
 
 end;
 
+
+
 procedure TForm1.Timer1Timer(Sender: TObject);
-  var i,y,minobjednavkacislo,error:Integer;
-      mnozstvoobjednavky:String;
+  var i,y,minobjednavkacislo,mnozstvoobjednavkycislo,error1,error2:Integer;
+      mnozstvoobjednavky,minobjednavka:String;
 begin
   minobjednavka:=Edit8.Text;
   mnozstvoobjednavky:= Edit2.Text;
 
-  val(minobjednavka,minobjednavkacislo,error);
+  val(minobjednavka,minobjednavkacislo,error1);
+  val(mnozstvoobjednavky,mnozstvoobjednavkycislo,error2);
 
-   if error=0 then
+
+   if (error1=0) and (error2=0) then
     begin
       for i:=1 to pocet do
         begin
@@ -431,6 +514,61 @@ begin
 
 end;
 
+procedure TForm1.Timer2Timer(Sender: TObject);
+begin
+
+  {Assignfile(subor,'TOVAR..txt');
+  Reset(subor);
+
+   while not eof(subor) do
+     begin
+     Readln(subor,tovar);
+     polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+     polozka[cislopolozky].nazov:=copy(tovar,pos(';',tovar)+1,length(tovar));
+     Memo1.Append(InttoStr(polozka[cislopolozky].kod)+(polozka[cislopolozky].nazov));
+     end;
+   Closefile(subor);
+
+   Assignfile(subor,'CENNIK..txt');
+   Reset(subor);
+
+    while not eof(subor) do
+      begin
+      Readln(subor,tovar);
+      polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+      delete(tovar,1,pos(';',tovar));
+      polozka[cislopolozky].cena:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+      Memo1.Append(InttoStr(polozka[cislopolozky].kod)+InttoStr((polozka[cislopolozky].cena)));
+      end;
+    Closefile(subor);
+
+      Assignfile(subor,'SKLAD..txt');
+  Reset(subor);
+
+   while not eof(subor) do
+     begin
+     Readln(subor,tovar);
+     polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+     polozka[cislopolozky].mnozstvo:=StrtoInt(copy(tovar,pos(';',tovar)+1,length(tovar)));
+     Memo1.Append(InttoStr(polozka[cislopolozky].kod)+InttoStr(polozka[cislopolozky].mnozstvo));
+     end;
+   Closefile(subor);
+
+   Timer2.Enabled:=false; }
+   if skladverzia<skladverziaaktualna then
+    begin
+  Assignfile(subor,'SKLAD..txt');
+  Rewrite(subor);
+
+  for cislopolozky:=1 to pocet do
+    begin
+      Writeln(InttoStr(polozka[cislopolozky].kod)+';'+InttoStr(polozka[cislopolozky].mnozstvo));
+      end;
+      Closefile(subor);
+      skladverzia:=skladverziaaktualna;
+    end;
+end;
+
 procedure TForm1.zoznamTovaru1Click(Sender: TObject);
 
 begin
@@ -438,9 +576,45 @@ begin
 
 end;
 
+procedure TForm1.zoznamTovaruButtonClick(Sender: TObject; aCol, aRow: Integer);
+  var i,j,l,pocetTriedenie,pomocna,najindex:Integer;
+  triedenieMnozstvo:array[1..maxpocet]of Integer;
+begin
+
+  { if zoznamTovaru.Col=3 then              //nefunguje triedenie na klik
+    begin
+      for i:=1 to pocet do
+       begin
+         triedenieMnozstvo[i]:=i;
+       end;   }
+
+
+
+     for pocetTriedenie:= pocet downto 2 do
+       begin
+         najindex:=1;
+         for j:=2 to pocetTriedenie do
+           begin
+             if polozka[triedenieMnozstvo[j]].mnozstvo>polozka[triedenieMnozstvo[najindex]].mnozstvo then
+              begin
+               najindex:=j;
+              end;
+             pomocna:=triedenieMnozstvo[pocetTriedenie];
+             triedenieMnozstvo[pocetTriedenie]:=triedenieMnozstvo[najindex];
+             triedenieMnozstvo[najindex]:=pomocna;
+           end;
+         end;
+
+       for l:=1 to pocet do
+        ciselnetriedenia[l]:=triedenieMnozstvo[l];   //triedenie podla kodu
+
+       Timer1.Enabled:=true;
+     end;
+
+
 procedure TForm1.zoznamTovaruClick(Sender: TObject);
   var zadalNieco:Boolean;
-      inputStringcislo,error:Integer;
+      inputStringcislo,error,i,doobjednanemnozstvo,objednanemnozstvo:Integer;
       inputString:String;
 begin
 
@@ -466,6 +640,28 @@ begin
     Showmessage('nezadal si spravne mnozstvo');
     exit;
     end;
+
+
+
+    for i:=1 to pocetobjednanych-1 do
+      begin
+       doobjednanemnozstvo:=StrtoInt(inputString);
+       objednanemnozstvo:= StrtoInt(zoznamTovaru1.cells[3,i]);
+       if zoznamTovaru1.cells[0,i]=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod) then
+          begin
+          zoznamTovaru1.cells[3,i]:=InttoStr(objednanemnozstvo + doobjednanemnozstvo);
+          polozka[ciselnetriedenia[cislopolozky]].mnozstvo:= polozka[ciselnetriedenia[cislopolozky]].mnozstvo + StrtoInt(inputString);
+          mnozstvopridaneho:=StrtoInt(InputString);
+          cenapridaneho:=polozka[ciselnetriedenia[cislopolozky]].cena;
+          cenanakupu:=cenanakupu+(cenapridaneho*mnozstvopridaneho);
+          Label3.Caption:=('spolu cela objednavka: '+ InttoStr(cenanakupu)+' centov');
+          end;
+
+
+
+       if zoznamTovaru1.cells[0,i]=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod) then
+        exit;
+        end;
         inc(indexobjednavky);
         inc(pocetobjednanych);
         zoznamTovaru1.Rowcount:=pocetobjednanych;
@@ -475,8 +671,17 @@ begin
         zoznamTovaru1.cells[2,indexobjednavky]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].cena);
         zoznamTovaru1.cells[3,indexobjednavky]:=inputString;
 
+        mnozstvopridaneho:=StrtoInt(zoznamTovaru1.cells[3,indexobjednavky]);
+        cenapridaneho:=polozka[ciselnetriedenia[cislopolozky]].cena;
+        cenanakupu:=cenanakupu+(cenapridaneho*mnozstvopridaneho);
+
         polozka[ciselnetriedenia[cislopolozky]].mnozstvo:= polozka[ciselnetriedenia[cislopolozky]].mnozstvo + StrtoInt(inputString);
         //spravit objednavanie cez imputquars
+//
+       Label3.Caption:=('spolu cela objednavka: '+ InttoStr(cenanakupu)+' centov');
+       inc(skladverziaaktualna);
+       Timer2.Enabled:=true;
+
 end;
 
 

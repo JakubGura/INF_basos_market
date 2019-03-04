@@ -1,10 +1,10 @@
 object Form1: TForm1
-  Left = 251
-  Height = 659
-  Top = 111
+  Left = 141
+  Height = 733
+  Top = 78
   Width = 1306
   Caption = 'Form1'
-  ClientHeight = 659
+  ClientHeight = 733
   ClientWidth = 1306
   DesignTimePPI = 120
   OnCreate = FormCreate
@@ -12,13 +12,13 @@ object Form1: TForm1
   object Image2: TImage
     Left = 0
     Height = 872
-    Top = -8
+    Top = 0
     Width = 1304
   end
   object Edit1: TEdit
     Left = 72
     Height = 39
-    Top = 72
+    Top = 136
     Width = 240
     AutoSize = False
     AutoSelect = False
@@ -28,6 +28,7 @@ object Form1: TForm1
     Font.Pitch = fpVariable
     Font.Quality = fqDraft
     OnClick = Edit1Click
+    OnExit = Edit1Exit
     ParentFont = False
     TabOrder = 0
     Text = 'zadaj nazov alebo kod'
@@ -35,25 +36,31 @@ object Form1: TForm1
   object Button1: TButton
     Left = 360
     Height = 39
-    Top = 72
+    Top = 136
     Width = 104
     Caption = 'hladaj'
     OnClick = Button1Click
     TabOrder = 1
   end
   object Button4: TButton
-    Left = 672
-    Height = 35
-    Top = 512
-    Width = 100
+    Left = 816
+    Height = 80
+    Top = 568
+    Width = 256
     Caption = 'objednaj'
+    Font.CharSet = ANSI_CHARSET
+    Font.Height = -40
+    Font.Name = '@Malgun Gothic Semilight'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
     OnClick = Button4Click
+    ParentFont = False
     TabOrder = 2
   end
   object Label6: TLabel
-    Left = 72
+    Left = 320
     Height = 38
-    Top = 8
+    Top = 48
     Width = 114
     Caption = 'SKLAD'
     Font.CharSet = ANSI_CHARSET
@@ -68,7 +75,7 @@ object Form1: TForm1
   object Button5: TButton
     Left = 480
     Height = 39
-    Top = 72
+    Top = 136
     Width = 104
     Caption = 'zrusit hladanie'
     OnClick = Button5Click
@@ -77,16 +84,18 @@ object Form1: TForm1
   object Edit8: TEdit
     Left = 480
     Height = 28
-    Top = 520
+    Top = 552
     Width = 116
+    NumbersOnly = True
     OnClick = Edit8Click
+    OnExit = Edit8Exit
     TabOrder = 4
     Text = 'zadaj mnozstvo'
   end
   object Label7: TLabel
     Left = 424
     Height = 23
-    Top = 520
+    Top = 552
     Width = 40
     Caption = ' pod:'
     Font.CharSet = ANSI_CHARSET
@@ -100,7 +109,7 @@ object Form1: TForm1
   object zoznamTovaru: TStringGrid
     Left = 72
     Height = 288
-    Top = 176
+    Top = 232
     Width = 544
     ColCount = 4
     Columns = <    
@@ -126,6 +135,7 @@ object Form1: TForm1
     RowCount = 7
     TabOrder = 5
     OnClick = zoznamTovaruClick
+    OnButtonClick = zoznamTovaruButtonClick
     ColWidths = (
       80
       124
@@ -134,10 +144,10 @@ object Form1: TForm1
     )
   end
   object zoznamTovaru1: TStringGrid
-    Left = 664
+    Left = 656
     Height = 288
-    Top = 176
-    Width = 548
+    Top = 232
+    Width = 504
     ColCount = 4
     Columns = <    
       item
@@ -146,11 +156,11 @@ object Form1: TForm1
       end    
       item
         Title.Caption = 'Nazov'
-        Width = 51
+        Width = 111
       end    
       item
         Title.Caption = 'Cena'
-        Width = 291
+        Width = 146
       end    
       item
         Title.Caption = 'Mnozstvo'
@@ -164,8 +174,8 @@ object Form1: TForm1
     OnClick = zoznamTovaru1Click
     ColWidths = (
       80
-      51
-      291
+      111
+      146
       170
     )
     Cells = (
@@ -184,7 +194,7 @@ object Form1: TForm1
   object Button2: TButton
     Left = 280
     Height = 31
-    Top = 136
+    Top = 192
     Width = 94
     Caption = 'cena'
     OnClick = Button2Click
@@ -193,7 +203,7 @@ object Form1: TForm1
   object Button3: TButton
     Left = 72
     Height = 31
-    Top = 136
+    Top = 192
     Width = 78
     Caption = 'kod'
     OnClick = Button3Click
@@ -202,32 +212,33 @@ object Form1: TForm1
   object Button6: TButton
     Left = 432
     Height = 31
-    Top = 136
+    Top = 192
     Width = 94
     Caption = 'mnozstvo'
     OnClick = Button6Click
     TabOrder = 9
   end
   object Image3: TImage
-    Left = 956
-    Height = 122
+    Left = 72
+    Height = 104
     Top = 16
-    Width = 256
+    Width = 216
   end
   object Edit2: TEdit
     Left = 480
     Height = 28
-    Top = 560
+    Top = 592
     Width = 116
     NumbersOnly = True
     OnClick = Edit2Click
+    OnExit = Edit2Exit
     TabOrder = 10
     Text = 'zadaj mnozstvo'
   end
   object Label1: TLabel
     Left = 424
     Height = 23
-    Top = 560
+    Top = 592
     Width = 46
     Caption = 'kolko:'
     Font.CharSet = ANSI_CHARSET
@@ -239,9 +250,9 @@ object Form1: TForm1
     ParentFont = False
   end
   object Label2: TLabel
-    Left = 448
+    Left = 444
     Height = 23
-    Top = 481
+    Top = 524
     Width = 172
     Caption = 'minimalna objednavka'
     Font.CharSet = ANSI_CHARSET
@@ -252,10 +263,32 @@ object Form1: TForm1
     ParentColor = False
     ParentFont = False
   end
+  object Label3: TLabel
+    Left = 872
+    Height = 1
+    Top = 536
+    Width = 1
+    ParentColor = False
+  end
+  object Memo1: TMemo
+    Left = 668
+    Height = 119
+    Top = 31
+    Width = 266
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 11
+  end
   object Timer1: TTimer
     Interval = 10
     OnTimer = Timer1Timer
     left = 72
-    top = 512
+    top = 560
+  end
+  object Timer2: TTimer
+    OnTimer = Timer2Timer
+    left = 128
+    top = 560
   end
 end
