@@ -26,14 +26,12 @@ type
     Edit1: TEdit;
     Edit2: TEdit;
     Edit8: TEdit;
-    Image2: TImage;
     Image3: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label6: TLabel;
     Label7: TLabel;
-    Memo1: TMemo;
     Timer2: TTimer;
     zoznamTovaru: TStringGrid;
     Timer1: TTimer;
@@ -69,6 +67,7 @@ var
   ciselnetriedenia:array[1..8]of Integer;
   subor:textfile;
   triedene,hladane:Boolean;
+  path,odpad:String;
   poradievt,cislopolozky,pocet,indexobjednavky,pocetobjednanych,cenanakupu,mnozstvopridaneho,cenapridaneho:Integer;
   skladverziaaktualna,skladverzia:Integer;
   Form1: TForm1;
@@ -91,8 +90,10 @@ begin
   skladverziaaktualna:=1;
   skladverzia:=1;
 
-  Image2.Picture.LoadfromFile('pozadie1.jpg');
-  Image3.Picture.LoadfromFile('logo.png');
+  path:='Z:\INFProjekt2019\TimA\';
+
+  //Image2.Picture.LoadfromFile('pozadie1.jpg');   zbytocne
+  Image3.Picture.LoadfromFile('logo.bmp');
 
 
   {cislopolozky:=0;
@@ -111,43 +112,43 @@ begin
     end;
   Closefile(subor);  //cim skor zavriet subor }
 
-    Assignfile(subor,'TOVAR..txt');
+    Assignfile(subor,path+'TOVAR.txt');
     Reset(subor);
     cislopolozky:=0;
+    Readln(subor,odpad);
    while not eof(subor) do
      begin
-      inc(cislopolozky);
-     Readln(subor,tovar);
-     polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
-     polozka[cislopolozky].nazov:=copy(tovar,pos(';',tovar)+1,length(tovar));
-     Memo1.Append(InttoStr(polozka[cislopolozky].kod)+(polozka[cislopolozky].nazov));
+       inc(cislopolozky);
+       Readln(subor,tovar);
+       polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+       polozka[cislopolozky].nazov:=copy(tovar,pos(';',tovar)+1,length(tovar));
      end;
    Closefile(subor);
 
-   Assignfile(subor,'CENNIK..txt');
+   Assignfile(subor,path+'CENNIK.txt');
    Reset(subor);
      cislopolozky:=0;
+     Readln(subor,odpad);
     while not eof(subor) do
       begin
-      inc(cislopolozky);
-      Readln(subor,tovar);
-      polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
-      delete(tovar,1,pos(';',tovar));
-      polozka[cislopolozky].cena:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
-      Memo1.Append(InttoStr(polozka[cislopolozky].kod)+InttoStr((polozka[cislopolozky].cena)));
+        inc(cislopolozky);
+        Readln(subor,tovar);
+        polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+        delete(tovar,1,pos(';',tovar));
+        polozka[cislopolozky].cena:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
       end;
     Closefile(subor);
 
-      Assignfile(subor,'SKLAD..txt');
+      Assignfile(subor,path+'SKLAD.txt');
   Reset(subor);
     cislopolozky:=0;
+    Readln(subor,odpad);
    while not eof(subor) do
      begin
-     inc(cislopolozky);
-     Readln(subor,tovar);
-     polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
-     polozka[cislopolozky].mnozstvo:=StrtoInt(copy(tovar,pos(';',tovar)+1,length(tovar)));
-     Memo1.Append(InttoStr(polozka[cislopolozky].kod)+InttoStr(polozka[cislopolozky].mnozstvo));
+       inc(cislopolozky);
+       Readln(subor,tovar);
+       polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+       polozka[cislopolozky].mnozstvo:=StrtoInt(copy(tovar,pos(';',tovar)+1,length(tovar)));
      end;
    Closefile(subor);
 
@@ -177,7 +178,7 @@ begin
     else hladane:='kod';
 
  Memo1.Append(hladane);    }
-  Timer1.Enabled:=false; //zastavenie updatovania zoznamu
+
 
   {cislopolozky:=0;
   if Edit1.Text='' then
@@ -210,6 +211,8 @@ begin
 
   zoznamTovaru.Rowcount:=2;
   hladane:=true;
+
+  Timer1.Enabled:=true;
  // if cislopolozky=1 then
 end;
 
@@ -425,7 +428,8 @@ end;
 
 procedure TForm1.Edit2Exit(Sender: TObject);
 begin
- Edit2.Text:='zadaj mnozstvo';
+  if Edit2.Text='' then
+    Edit2.Text:='zadaj mnozstvo';
 end;
 
 
@@ -437,6 +441,7 @@ end;
 
 procedure TForm1.Edit8Exit(Sender: TObject);
 begin
+  if Edit8.Text='' then
   Edit8.Text:='zadaj mnozstvo';
 end;
 
@@ -501,6 +506,15 @@ begin
         end;
       end;
 
+       if hladane=true then
+       begin
+         zoznamTovaru.cells[0,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].kod);
+         zoznamTovaru.cells[1,1]:=polozka[ciselnetriedenia[cislopolozky]].nazov;
+         zoznamTovaru.cells[2,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].cena);
+         zoznamTovaru.cells[3,1]:=InttoStr(polozka[ciselnetriedenia[cislopolozky]].mnozstvo);
+         exit;
+       end;
+
       for y:=1 to pocet do
       begin
       zoznamTovaru.cells[0,y]:=InttoStr(polozka[ciselnetriedenia[y]].kod);
@@ -512,9 +526,12 @@ begin
 
 
 
+
+
 end;
 
 procedure TForm1.Timer2Timer(Sender: TObject);
+  var k:Integer;
 begin
 
   {Assignfile(subor,'TOVAR..txt');
@@ -557,15 +574,16 @@ begin
    Timer2.Enabled:=false; }
    if skladverzia<skladverziaaktualna then
     begin
-  Assignfile(subor,'SKLAD..txt');
-  Rewrite(subor);
+      Assignfile(subor,path+'SKLAD.txt');
+      Rewrite(subor);
 
-  for cislopolozky:=1 to pocet do
-    begin
-      Writeln(subor,InttoStr(polozka[cislopolozky].kod)+';'+InttoStr(polozka[cislopolozky].mnozstvo));
-      end;
-      Closefile(subor);
-      skladverzia:=skladverziaaktualna;
+      Writeln(subor,odpad[1]);
+      for k:=1 to pocet do
+        begin
+         Writeln(subor,InttoStr(polozka[k].kod)+';'+InttoStr(polozka[k].mnozstvo));
+        end;
+    Closefile(subor);
+    skladverzia:=skladverziaaktualna;
     end;
 end;
 

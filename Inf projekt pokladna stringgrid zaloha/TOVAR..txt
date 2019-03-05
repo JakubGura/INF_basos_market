@@ -1,6 +1,0 @@
-100;rozok
-101;praclik
-102;jablka kg
-103;citron ks
-104;mlieko
-105;tvaroh
