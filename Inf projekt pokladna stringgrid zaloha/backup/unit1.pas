@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, ServiceManager, FileUtil, Forms, Controls, Graphics,
   Dialogs, StdCtrls, ExtCtrls, Grids;
 
-const maxpocet=20;
+const maxpocet=100;
+
 type
   zoznam=record
          nazov:String;
@@ -63,8 +64,8 @@ type
   end;
 
 var
-  polozka:array[1..8]of zoznam;
-  ciselnetriedenia:array[1..8]of Integer;
+  polozka:array[1..100]of zoznam;
+  ciselnetriedenia:array[1..100]of Integer;
   subor:textfile;
   triedene,hladane:Boolean;
   path,odpad:String;
@@ -90,7 +91,8 @@ begin
   skladverziaaktualna:=1;
   skladverzia:=1;
 
-  path:='Z:\INFProjekt2019\TimA\';
+  //path:='Z:\INFProjekt2019\TimA\';
+  path:='';
 
   //Image2.Picture.LoadfromFile('pozadie1.jpg');   zbytocne
   Image3.Picture.LoadfromFile('logo.bmp');
@@ -112,7 +114,7 @@ begin
     end;
   Closefile(subor);  //cim skor zavriet subor }
 
-    Assignfile(subor,'TOVAR.txt');
+    Assignfile(subor,path+'TOVAR.txt');
     Reset(subor);
     cislopolozky:=0;
     Readln(subor,odpad);
@@ -125,7 +127,7 @@ begin
      end;
    Closefile(subor);
 
-   Assignfile(subor,'CENNIK.txt');
+   Assignfile(subor,path+'CENNIK.txt');
    Reset(subor);
      cislopolozky:=0;
      Readln(subor,odpad);
@@ -139,7 +141,7 @@ begin
       end;
     Closefile(subor);
 
-      Assignfile(subor,'SKLAD.txt');
+      Assignfile(subor,path+'SKLAD.txt');
   Reset(subor);
     cislopolozky:=0;
     Readln(subor,odpad);
@@ -574,7 +576,7 @@ begin
    Timer2.Enabled:=false; }
    if skladverzia<skladverziaaktualna then
     begin
-      Assignfile(subor,'SKLAD.txt');
+      Assignfile(subor,path+'SKLAD.txt');
       Rewrite(subor);
 
       Writeln(subor,odpad[1]);

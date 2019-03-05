@@ -8,7 +8,8 @@ uses
   Classes, SysUtils, ServiceManager, FileUtil, Forms, Controls, Graphics,
   Dialogs, StdCtrls, ExtCtrls, Grids;
 
-const maxpocet=20;
+const maxpocet=100;
+
 type
   zoznam=record
          nazov:String;
@@ -63,8 +64,8 @@ type
   end;
 
 var
-  polozka:array[1..8]of zoznam;
-  ciselnetriedenia:array[1..8]of Integer;
+  polozka:array[1..100]of zoznam;
+  ciselnetriedenia:array[1..100]of Integer;
   subor:textfile;
   triedene,hladane:Boolean;
   path,odpad:String;
@@ -90,7 +91,8 @@ begin
   skladverziaaktualna:=1;
   skladverzia:=1;
 
-  path:='Z:\INFProjekt2019\TimA\';
+  //path:='Z:\INFProjekt2019\TimA\';
+  path:='';
 
   //Image2.Picture.LoadfromFile('pozadie1.jpg');   zbytocne
   Image3.Picture.LoadfromFile('logo.bmp');
@@ -159,7 +161,7 @@ begin
    ciselnetriedenia[l]:=l;    //beztriedenia,zakladny vypis
 
  Timer1.Enabled:=true;
-
+ zoznamTovaru.Rowcount:=pocet+1;
     for y:=1 to pocet do
       begin
         zoznamTovaru.cells[0,y]:=InttoStr(polozka[y].kod);

@@ -55,7 +55,7 @@ object Form1: TForm1
   object Label6: TLabel
     Left = 560
     Height = 77
-    Top = 32
+    Top = 24
     Width = 233
     Caption = 'SKLAD'
     Font.CharSet = ANSI_CHARSET
