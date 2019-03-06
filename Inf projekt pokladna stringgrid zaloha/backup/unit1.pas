@@ -67,10 +67,10 @@ var
   polozka:array[1..100]of zoznam;
   ciselnetriedenia:array[1..100]of Integer;
   subor:textfile;
-  triedene,hladane:Boolean;
+  triedene,hladane,jazapisujem:Boolean;
   path,odpad:String;
   poradievt,cislopolozky,pocet,indexobjednavky,pocetobjednanych,cenanakupu,mnozstvopridaneho,cenapridaneho:Integer;
-  skladverziaaktualna,skladverzia:Integer;
+  tovarverziaaktualna,cennikverziaaktualna,skladverziaaktualna,skladverzia,tovarverzia,cennikverzia:Integer;
   Form1: TForm1;
 
 implementation
@@ -80,16 +80,32 @@ implementation
 { TForm1 }
 
 procedure TForm1.FormCreate(Sender: TObject);
-  var l,y:Integer;
+  var l,y,zaciatocnaverziatovar,zaciatocnaverziasklad,zaciatocnaverziacennik:Integer;
       tovar:String;
 begin
   cenanakupu:=0;
   pocetobjednanych:=1;
   indexobjednavky:=0;
   Timer1.Enabled:=false;
-  Timer2.Enabled:=false;
-  skladverziaaktualna:=1;
-  skladverzia:=1;
+  Timer2.Enabled:=true;
+
+  Assignfile(subor,'TOVAR_VERZIA.txt');
+  Reset(subor);
+  Read(subor,zaciatocnaverziatovar);
+  tovarverzia:=zaciatocnaverziatovar;
+  Closefile(subor);
+
+  Assignfile(subor,'SKLAD_VERZIA.txt');
+  Reset(subor);
+  Read(subor,zaciatocnaverziasklad);
+  skladverzia:=zaciatocnaverziasklad;
+  Closefile(subor);
+
+  Assignfile(subor,'CENNIK_VERZIA.txt');
+  Reset(subor);
+  Read(subor,zaciatocnaverziacennik);
+  cennikverzia:=zaciatocnaverziacennik;
+  Closefile(subor);
 
   //path:='Z:\INFProjekt2019\TimA\';
   path:='';
@@ -113,6 +129,8 @@ begin
 
     end;
   Closefile(subor);  //cim skor zavriet subor }
+
+
 
     Assignfile(subor,path+'TOVAR.txt');
     Reset(subor);
@@ -161,7 +179,7 @@ begin
    ciselnetriedenia[l]:=l;    //beztriedenia,zakladny vypis
 
  Timer1.Enabled:=true;
-
+ zoznamTovaru.Rowcount:=pocet+1;
     for y:=1 to pocet do
       begin
         zoznamTovaru.cells[0,y]:=InttoStr(polozka[y].kod);
@@ -534,6 +552,7 @@ end;
 
 procedure TForm1.Timer2Timer(Sender: TObject);
   var k:Integer;
+      tovar:String;
 begin
 
   {Assignfile(subor,'TOVAR..txt');
@@ -574,11 +593,75 @@ begin
    Closefile(subor);
 
    Timer2.Enabled:=false; }
-   if skladverzia<skladverziaaktualna then
+   Assignfile(subor,'TOVAR_VERZIA.txt');
+   Reset(subor);
+   Read(subor,tovarverziaaktualna);
+  if  tovarverzia<tovarverziaaktualna then
+  begin
+  Assignfile(subor,path+'TOVAR.txt');
+    Reset(subor);
+    cislopolozky:=0;
+    Readln(subor,odpad);
+   while not eof(subor) do
+     begin
+       inc(cislopolozky);
+       Readln(subor,tovar);
+       polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+       polozka[cislopolozky].nazov:=copy(tovar,pos(';',tovar)+1,length(tovar));
+     end;
+      tovarverzia:=tovarverziaaktualna;
+   end;
+
+   Closefile(subor);
+
+   Assignfile(subor,'CENNIK_VERZIA.txt');
+   Reset(subor);
+   Read(subor,cennikverziaaktualna);
+   if  cennikverzia<cennikverziaaktualna then
+   begin
+   Assignfile(subor,path+'CENNIK.txt');
+   Reset(subor);
+     cislopolozky:=0;
+     Readln(subor,odpad);
+    while not eof(subor) do
+      begin
+        inc(cislopolozky);
+        Readln(subor,tovar);
+        polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+        delete(tovar,1,pos(';',tovar));
+        polozka[cislopolozky].cena:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+      end;
+      cennikverzia:=cennikverziaaktualna;
+    end;
+    Closefile(subor);
+
+   Assignfile(subor,'SKLAD_VERZIA.txt');
+   Reset(subor);
+   Read(subor,skladverziaaktualna);
+    if  skladverzia<skladverziaaktualna then
+      begin
+      Assignfile(subor,path+'SKLAD.txt');
+      Reset(subor);
+    cislopolozky:=0;
+    Readln(subor,odpad);
+   while not eof(subor) do
+     begin
+       inc(cislopolozky);
+       Readln(subor,tovar);
+       polozka[cislopolozky].kod:=StrtoInt(copy(tovar,1,pos(';',tovar)-1));
+       polozka[cislopolozky].mnozstvo:=StrtoInt(copy(tovar,pos(';',tovar)+1,length(tovar)));
+     end;
+     skladverzia:=skladverziaaktualna;
+      end;
+   Closefile(subor);
+
+   Assignfile(subor,'SKLAD_VERZIA.txt');
+   Reset(subor);
+   Read(subor,skladverziaaktualna);
+   if skladverzia<skladverziaaktualna and jazapisujem=true then
     begin
       Assignfile(subor,path+'SKLAD.txt');
       Rewrite(subor);
-
       Writeln(subor,odpad[1]);
       for k:=1 to pocet do
         begin
@@ -586,6 +669,7 @@ begin
         end;
     Closefile(subor);
     skladverzia:=skladverziaaktualna;
+    jazapisujem:=false;
     end;
 end;
 
@@ -700,6 +784,7 @@ begin
 //
        Label3.Caption:=('spolu cela objednavka: '+ InttoStr(cenanakupu)+' centov');
        inc(skladverziaaktualna);
+       jazapisujem:=true;
        Timer2.Enabled:=true;
 
 end;
